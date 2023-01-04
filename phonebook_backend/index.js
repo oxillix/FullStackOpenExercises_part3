@@ -69,9 +69,17 @@ app.delete("/api/persons/:id", (request, response) => {
 app.post("/api/persons", (request, response) => {
   const body = request.body;
 
+  // check if name or number is missing
   if (!body.name && !body.number) {
     return response.status(400).json({
       error: "body and/or number missing",
+    });
+  }
+
+  // check if name already exists
+  if (persons.filter((person) => person.name.toLowerCase() === body.name.toLowerCase()).length > 0) {
+    return response.status(409).json({
+      error: "name must be unique",
     });
   }
 
