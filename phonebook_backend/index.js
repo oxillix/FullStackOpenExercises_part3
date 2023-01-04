@@ -26,6 +26,12 @@ let persons = [
   },
 ];
 
+const generateId = () => {
+  let min = 5;
+  let max = 10000;
+  return Math.floor(Math.random() * (max - min) + min);
+};
+
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
 });
@@ -57,6 +63,27 @@ app.delete("/api/persons/:id", (request, response) => {
   persons = persons.filter((person) => person.id !== id);
 
   response.status(204).end();
+  console.log(persons);
+});
+
+app.post("/api/persons", (request, response) => {
+  const body = request.body;
+
+  if (!body.name && !body.number) {
+    return response.status(400).json({
+      error: "body and/or number missing",
+    });
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: generateId(),
+  };
+
+  persons = persons.concat(person);
+
+  response.json(person);
   console.log(persons);
 });
 
