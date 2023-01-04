@@ -1,8 +1,9 @@
 const express = require("express");
 const app = express();
+//morgan for logging
+const morgan = require("morgan");
 
-app.use(express.json());
-
+// data
 let persons = [
   {
     id: 1,
@@ -26,12 +27,30 @@ let persons = [
   },
 ];
 
+// Middleware before routes
+app.use(morgan("tiny")); // morgan for logging (tiny configuration)
+
+// own middleware
+const requestLogger = (request, response, next) => {
+  console.log("Method:", request.method);
+  console.log("Path:  ", request.path);
+  console.log("Body:  ", request.body);
+  console.log("---");
+  next();
+};
+
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({ error: "unknown endpoint" });
+};
+
+// helper functions
 const generateId = () => {
   let min = 5;
   let max = 10000;
   return Math.floor(Math.random() * (max - min) + min);
 };
 
+// Routes
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
 });
@@ -77,7 +96,11 @@ app.post("/api/persons", (request, response) => {
   }
 
   // check if name already exists
-  if (persons.filter((person) => person.name.toLowerCase() === body.name.toLowerCase()).length > 0) {
+  if (
+    persons.filter(
+      (person) => person.name.toLowerCase() === body.name.toLowerCase()
+    ).length > 0
+  ) {
     return response.status(409).json({
       error: "name must be unique",
     });
@@ -95,6 +118,12 @@ app.post("/api/persons", (request, response) => {
   console.log(persons);
 });
 
+// middleware usage
+app.use(express.json());
+app.use(requestLogger);
+app.use(unknownEndpoint);
+
+// server config
 const PORT = 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
