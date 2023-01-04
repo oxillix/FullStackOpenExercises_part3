@@ -72,7 +72,7 @@ app.post("/api/persons", (request, response) => {
   // check if name or number is missing
   if (!body.name && !body.number) {
     return response.status(400).json({
-      error: "body and/or number missing",
+      error: "name and/or number missing",
     });
   }
 
