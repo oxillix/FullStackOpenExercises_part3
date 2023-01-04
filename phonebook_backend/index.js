@@ -28,7 +28,14 @@ let persons = [
 ];
 
 // Middleware before routes
-app.use(morgan("tiny")); // morgan for logging (tiny configuration)
+app.use(express.json());
+//logging
+morgan.token("body", function (req, res) {
+  return JSON.stringify(req.body);
+});
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body")
+); // morgan for logging (tiny configuration)
 
 // own middleware
 const requestLogger = (request, response, next) => {
@@ -115,11 +122,9 @@ app.post("/api/persons", (request, response) => {
   persons = persons.concat(person);
 
   response.json(person);
-  console.log(persons);
 });
 
-// middleware usage
-app.use(express.json());
+// middleware after routes
 app.use(requestLogger);
 app.use(unknownEndpoint);
 
