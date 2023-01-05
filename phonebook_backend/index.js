@@ -128,7 +128,7 @@ app.use(requestLogger);
 app.use(unknownEndpoint);
 
 // server config
-const PORT = 3001;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
