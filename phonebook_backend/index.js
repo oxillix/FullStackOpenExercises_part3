@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 //morgan for logging
 const morgan = require("morgan");
 
@@ -28,7 +29,10 @@ let persons = [
 ];
 
 // Middleware before routes
+app.use(cors());
+app.use(express.static("build"));
 app.use(express.json());
+
 //logging
 morgan.token("body", function (req, res) {
   return JSON.stringify(req.body);
@@ -85,10 +89,10 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.delete("/api/persons/:id", (request, response) => {
   const id = Number(request.params.id);
-  persons = persons.filter((person) => person.id !== id);
-
-  response.status(204).end();
   console.log(persons);
+  persons = persons.filter((person) => person.id !== id);
+  console.log(persons);
+  response.status(204).end();
 });
 
 app.post("/api/persons", (request, response) => {

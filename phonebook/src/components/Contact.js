@@ -6,12 +6,19 @@ const Contact = ({ person }) => {
       <span>
         {person.name} {person.number}{" "}
       </span>
-      <button onClick={() => { 
-        if (window.confirm(`Delete ${person.name}?`)) {
-          personService.deleteByID(person.id);
-          window.location.reload();
-        }
-      }}>delete</button>
+      <button
+        type="button"
+        onClick={() => {
+          if (window.confirm(`Delete ${person.name}?`)) {
+            console.log(`Deleted ${person.name}`);
+            personService.deleteByID(person.id).then((response) => {
+              window.location.reload();
+            });
+          }
+        }}
+      >
+        delete
+      </button>
     </li>
   );
 };
