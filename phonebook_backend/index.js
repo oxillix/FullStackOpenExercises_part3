@@ -85,26 +85,25 @@ app.post("/api/persons", (request, response) => {
     });
   }
 
-  // check if name already exists
-  if (
-    persons.filter(
-      (person) => person.name.toLowerCase() === body.name.toLowerCase()
-    ).length > 0
-  ) {
-    return response.status(409).json({
-      error: "name must be unique",
-    });
-  }
+  // // check if name already exists
+  // if (
+  //   persons.filter(
+  //     (person) => person.name.toLowerCase() === body.name.toLowerCase()
+  //   ).length > 0
+  // ) {
+  //   return response.status(409).json({
+  //     error: "name must be unique",
+  //   });
+  // }
 
-  const person = {
+  const person = new Person({
     name: body.name,
     number: body.number,
-    id: generateId(),
-  };
+  });
 
-  persons = persons.concat(person);
-
-  response.json(person);
+  person.save().then((savedPerson) => {
+    response.json(savedPerson);
+  });
 });
 
 // middleware after routes

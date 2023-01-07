@@ -5,40 +5,6 @@ mongoose.set("strictQuery", false);
 const url = process.env.MONGODB_URI;
 console.log("connecting to", url);
 
-// const savePersonToDB = (name, number) => {
-//   mongoose
-//     .connect(url)
-//     .then((result) => {
-//       const person = new Person({
-//         name: name,
-//         number: number,
-//       });
-
-//       return person.save();
-//     })
-//     .then(() => {
-//       console.log(`added ${name} number ${number} to phonebook`);
-//       return mongoose.connection.close();
-//     })
-//     .catch((err) => console.log(err));
-// };
-
-// const getAllPeopleFromDB = () => {
-//   mongoose
-//     .connect(url)
-//     .then((result) => {
-//       console.log("phonebook:");
-
-//       Person.find().then((result) => {
-//         result.forEach((person) => {
-//           console.log(`${person.name} ${person.number}`);
-//         });
-//         mongoose.connection.close();
-//       });
-//     })
-//     .catch((err) => console.log(err));
-// };
-
 mongoose
   .connect(url)
   .then((result) => {
