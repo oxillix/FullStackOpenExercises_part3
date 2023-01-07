@@ -31,7 +31,7 @@ const App = () => {
         )
       ) {
         const updatedPerson = { ...person, number: newNumber };
-        
+
         personService
           .update(updatedPerson.id, updatedPerson)
           .then((returnedPerson) => {
@@ -48,14 +48,22 @@ const App = () => {
             }, 5000);
           })
           .catch((error) => {
-            setMessageType("Error");
-            setMessage(
-              `Information of ${updatedPerson.name} has already been removed from server`
-            );
-            setTimeout(() => {
-              setMessage("");
-            }, 5000);
-            setPersons(persons.filter((p) => p.id !== updatedPerson.id));
+            if (error.name === "ValidationError") {
+              setMessageType("Error");
+              setMessage(error.response.data.error);
+              setTimeout(() => {
+                setMessage("");
+              }, 5000);
+            } else {
+              setMessageType("Error");
+              setMessage(
+                `Information of ${updatedPerson.name} has already been removed from server`
+              );
+              setTimeout(() => {
+                setMessage("");
+              }, 5000);
+              setPersons(persons.filter((p) => p.id !== updatedPerson.id));
+            }
           });
       }
     } else {
@@ -64,17 +72,26 @@ const App = () => {
         number: newNumber,
       };
 
-      personService.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson));
-        setNewName("");
-        setNewNumber("");
+      personService
+        .create(personObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson));
+          setNewName("");
+          setNewNumber("");
 
-        setMessageType("Success");
-        setMessage(`Added ${returnedPerson.name}`);
-        setTimeout(() => {
-          setMessage("");
-        }, 5000);
-      });
+          setMessageType("Success");
+          setMessage(`Added ${returnedPerson.name}`);
+          setTimeout(() => {
+            setMessage("");
+          }, 5000);
+        })
+        .catch((error) => {
+          setMessageType("Error");
+          setMessage(error.response.data.error);
+          setTimeout(() => {
+            setMessage("");
+          }, 5000);
+        });
     }
   };
 
