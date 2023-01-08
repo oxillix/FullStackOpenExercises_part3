@@ -1,15 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
-//getting rid of DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7
-mongoose.set("strictQuery", false);
+// getting rid of DeprecationWarning: Mongoose: the `strictQuery` option will be switched back to `false` by default in Mongoose 7
+mongoose.set('strictQuery', false);
 
 const savePersonToDB = (name, number) => {
   mongoose
     .connect(url)
-    .then((result) => {
+    .then(() => {
       const person = new Person({
-        name: name,
-        number: number,
+        name,
+        number,
       });
 
       return person.save();
@@ -24,8 +24,8 @@ const savePersonToDB = (name, number) => {
 const getAllPeopleFromDB = () => {
   mongoose
     .connect(url)
-    .then((result) => {
-      console.log("phonebook:");
+    .then(() => {
+      console.log('phonebook:');
 
       Person.find().then((result) => {
         result.forEach((person) => {
@@ -39,7 +39,7 @@ const getAllPeopleFromDB = () => {
 
 if (!process.argv[2]) {
   console.log(
-    "Please provide the password as an argument: node mongo.js <password> <name> <number>"
+    'Please provide the password as an argument: node mongo.js <password> <name> <number>',
   );
   process.exit(1);
 }
@@ -51,7 +51,7 @@ const personSchema = new mongoose.Schema({
   name: String,
   number: String,
 });
-const Person = mongoose.model("Person", personSchema);
+const Person = mongoose.model('Person', personSchema);
 
 if (process.argv[2] && !process.argv[3] && !process.argv[4]) {
   getAllPeopleFromDB();
